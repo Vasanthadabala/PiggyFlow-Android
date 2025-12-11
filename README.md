@@ -1,108 +1,73 @@
-💰 PiggyFlow – Budget Tracker App (Android)
-<p align="center"> <img src="https://github.com/user-attachments/assets/android_ss_1" width="24%" /> <img src="https://github.com/user-attachments/assets/android_ss_2" width="24%" /> <img src="https://github.com/user-attachments/assets/android_ss_3" width="24%" /> <img src="https://github.com/user-attachments/assets/android_ss_4" width="24%" /> </p> <p align="center"> <img src="https://github.com/user-attachments/assets/android_ss_5" width="24%" /> <img src="https://github.com/user-attachments/assets/android_ss_6" width="24%" /> <img src="https://github.com/user-attachments/assets/android_ss_7" width="24%" /> <img src="https://github.com/user-attachments/assets/android_ss_8" width="24%" /> </p>
+# 💰 PiggyFlow - Budget Tracker App
 
-A beautifully designed Android Budget Tracker App built using Kotlin, Jetpack Compose, Ktor, and Room, helping users manage expenses, track budgets, and visualize financial trends effortlessly.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/955a363d-5991-4e3d-b86a-7f6320c44174" width="24%" />
+  <img src="https://github.com/user-attachments/assets/20f2c761-8e8f-48d4-a7ff-8ea3dc9598f4" width="24%" />
+  <img src="https://github.com/user-attachments/assets/afa9d29b-942b-44ee-b949-89dd4bdabb2a" width="24%" />
+  <img src="https://github.com/user-attachments/assets/63ef7eb2-df1f-49a4-920c-ee0cc7fe307a" width="24%" />
+</p>
 
-🚀 Overview
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f2eba88a-5759-4fd2-a69f-057d6b35c719" width="24%" />
+  <img src="https://github.com/user-attachments/assets/34b9a9e9-2aa4-4337-82d8-f483ef6870ed" width="24%" />
+  <img src="https://github.com/user-attachments/assets/d4792ea6-e7a6-4325-9642-84432880dba9" width="24%" />
+  <img src="https://github.com/user-attachments/assets/a072ef7b-a5ba-473b-9b64-95d99d90914b" width="24%" />
+</p>
 
-PiggyFlow provides a clean and intuitive interface for tracking daily expenses and income.
-The app includes charts, category insights, PDF export, cloud backup/restore, and a modern Compose UI to deliver a polished experience.
+A beautifully designed **iOS Budget Tracker App** built with **SwiftUI** and **SwiftData**, helping users easily track their income, expenses, and spending trends — all synced securely via **iCloud**.  
 
-✨ Features
-🏠 Onboarding
+---
 
-Smooth onboarding experience introducing the app.
+## 🚀 Overview
 
-Bottom sheet to enter username and personalize the dashboard.
+The **Budget Tracker App** allows users to manage their daily expenses efficiently with clean visuals and a seamless experience.  
+It supports **bill scanning**, **charts**, **detailed expense tracking**, and **cross-device sync** through iCloud.
 
-📊 Dashboard (Home)
+---
 
-Credit-card style summary card showing:
+## ✨ Features
 
-Total Budget
+### 🏠 Onboarding
+- Simple onboarding screen with app intro and “Get Started” button.  
+- Bottom sheet for entering username and continuing to the home screen.
 
-Total Spent
+### 📊 Dashboard
+- **Line chart** to visualize monthly expense trends.  
+- **Donut chart** to show the balance between income and expenses.  
+- Section for **Top Expenses** below the charts.  
+- Month toggle to switch between current and previous months.
 
-Remaining Balance
+### 📱 Expense Management
+- Add, edit, and delete expenses.  
+- Swipe left to delete entries.  
+- Detailed expense view with editing capability.
 
-Search bar and filters to quickly find transactions.
+### 🧾 Document Scanning
+- Scan bills using the device camera.  
+- Automatically extract and add expenses from scanned bills.
 
-Complete list of all income and expenses.
+### ☁️ Cloud Sync & Authentication
+- **Apple Sign-In** for secure login.  
+- **iCloud Sync** for automatic cross-device synchronization.
 
-Each transaction opens a detailed view with:
+### 🔔 Notifications Panel
+- Stay informed with a built-in notifications section for alerts and updates.
 
-Amount
+### ⚙️ Optimizations
+- Smooth UI animations and minor performance improvements across screens.
 
-Category
+---
 
-Description
+## 🧠 Tech Stack
 
-Edit
+| Component | Technology |
+|------------|-------------|
+| Language | Swift |
+| Framework | SwiftUI |
+| Database | SwiftData |
+| Cloud Sync | iCloud |
+| Authentication | Sign in with Apple |
+| Charts | Swift Charts |
+| Document Scanning | VisionKit / DataScanner API |
 
-Delete
-
-Floating Action Button to open a bottom sheet for:
-
-➕ Adding Income
-
-➖ Adding Expense
-
-📈 Stats & Insights
-
-Interactive line chart showing monthly spending trends.
-
-“Top Spending Categories” section ranked from high to low.
-
-Each category is clickable, opening a detail screen showing:
-
-All transactions under that category
-
-Budget vs Expense analysis
-
-One-tap option to export the category report as PDF.
-
-⚙️ Settings & Account
-
-User profile card showing username.
-
-Google Sign-In support for cloud sync.
-
-Options available:
-
-Backup Data
-
-Restore Backup
-
-Delete Backup
-
-Sign Out
-
-About card leading to app information screen.
-
-☁️ Cloud Backup
-
-Fully integrated Google Sign-In for secure data backup and restore.
-
-Allows users to store, retrieve, and delete cloud backups anytime.
-
-🧠 Tech Stack
-Component	Technology
-Language	Kotlin
-UI	Jetpack Compose
-Architecture	MVVM + Coroutines + StateFlow
-Database	Room / SharedPreferences
-Networking	Ktor Client
-Navigation	Jetpack Navigation
-Charts	Custom Compose Canvas / Libraries
-Cloud Sync	Google Sign-In + Cloud Storage
-Background Work	WorkManager
-PDF Export	Android PDFDocument
-🎉 Additional Highlights
-
-Elegant and smooth UI animations.
-
-Light & Dark mode support.
-
-Clean architecture with scalable codebase.
-
-Highly responsive design across screen sizes.
+---
