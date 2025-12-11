@@ -1,18 +1,19 @@
 # 💰 PiggyFlow - Budget Tracker App
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/955a363d-5991-4e3d-b86a-7f6320c44174" width="24%" />
-  <img src="https://github.com/user-attachments/assets/20f2c761-8e8f-48d4-a7ff-8ea3dc9598f4" width="24%" />
-  <img src="https://github.com/user-attachments/assets/afa9d29b-942b-44ee-b949-89dd4bdabb2a" width="24%" />
-  <img src="https://github.com/user-attachments/assets/63ef7eb2-df1f-49a4-920c-ee0cc7fe307a" width="24%" />
+  <img src="https://github.com/user-attachments/assets/dea4410a-365f-4937-a9bd-0af47d95e2b8" width="24%" />
+  <img src="https://github.com/user-attachments/assets/f4f40106-7d69-4db5-b47d-33ac6b73f420" width="24%" />
+  <img src="https://github.com/user-attachments/assets/d44aca49-08fb-4b65-b9c0-80f884bcc288" width="24%" />
+  <img src="https://github.com/user-attachments/assets/5ef4b298-8801-4351-bce7-211e41cfb703" width="24%" />
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/f2eba88a-5759-4fd2-a69f-057d6b35c719" width="24%" />
-  <img src="https://github.com/user-attachments/assets/34b9a9e9-2aa4-4337-82d8-f483ef6870ed" width="24%" />
-  <img src="https://github.com/user-attachments/assets/d4792ea6-e7a6-4325-9642-84432880dba9" width="24%" />
-  <img src="https://github.com/user-attachments/assets/a072ef7b-a5ba-473b-9b64-95d99d90914b" width="24%" />
+  <img src="https://github.com/user-attachments/assets/cff15670-40fa-4afc-9c48-f51118a7132f" width="24%" />
+  <img src="https://github.com/user-attachments/assets/000d2c3b-e2e6-468b-81b4-30d3a614161a" width="24%" />
+  <img src="https://github.com/user-attachments/assets/3eaa1791-9ec5-4a93-bcd5-1304b36dc001" width="24%" />
+  <img src="https://github.com/user-attachments/assets/e6f89443-3101-479f-9d37-602e5fd8cee6" width="24%" />
 </p>
+
 
 A beautifully designed **iOS Budget Tracker App** built with **SwiftUI** and **SwiftData**, helping users easily track their income, expenses, and spending trends — all synced securely via **iCloud**.  
 
