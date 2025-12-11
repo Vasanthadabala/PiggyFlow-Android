@@ -46,13 +46,9 @@ It supports charts, category insights, detailed expense tracking, and secure bac
       - Delete
 - Floating Action Button to open a bottom sheet for:
 - Adding Income And Expense
+- Detailed expense view with editing and delete capability.
 
-### 📱 Stats
-- Add, edit, and delete expenses.  
-- Swipe left to delete entries.  
-- Detailed expense view with editing capability.
-
-### 🧾 Document Scanning
+### 🧾 Stats
 - Interactive line chart showing monthly spending trends.  
 - “Top Spending Categories” section ranked from high to low.
 - Each category is clickable, opening a detail screen showing:
