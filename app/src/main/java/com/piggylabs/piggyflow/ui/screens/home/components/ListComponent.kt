@@ -99,7 +99,7 @@ fun ListComponent(navController: NavHostController, transaction: TransactionUi){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 10.dp),
+                .padding(vertical = 10.dp, horizontal = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -108,7 +108,7 @@ fun ListComponent(navController: NavHostController, transaction: TransactionUi){
             ) {
                 Box(
                     modifier = Modifier
-                        .size(44.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
                         .background( if (isExpense) Color.Red.copy(alpha = 0.15f) else Color(0xFF27C152).copy(alpha = 0.2f) ),
                     contentAlignment = Alignment.Center
@@ -118,13 +118,13 @@ fun ListComponent(navController: NavHostController, transaction: TransactionUi){
                         Text(
                             text = title?.trim()?.firstOrNull()?.uppercase() ?: "",
                             color = Color.White,
-                            fontSize = 24.sp,
+                            fontSize = 22.sp,
                             fontWeight = FontWeight.Bold
                         )
                     } else {
                         Text(
                             text = emoji,
-                            fontSize = 24.sp
+                            fontSize = 22.sp
                         )
                     }
                 }
@@ -155,24 +155,28 @@ fun ListComponent(navController: NavHostController, transaction: TransactionUi){
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                if(isExpense) {
+                    Text(
+                        text = "-",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().red
+                    )
+                }else{
+                    Text(
+                        text = "+",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().green
+                    )
+                }
+
                 Text(
-                    text = "₹ $amount",
+                    text = "₹$amount",
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.W500,
+                    fontWeight = FontWeight.Normal,
                     color = amountColor
-                )
-
-                Icon(
-                    imageVector = if (isExpense)
-                        Icons.Default.ArrowOutward
-                    else
-                        Icons.Default.ArrowOutward,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .size(16.dp)
-                        .rotate( if (!isExpense) 180f else 0f),
-                    tint = amountColor
                 )
             }
         }

@@ -803,8 +803,36 @@ fun TransactionBottomSheet(
         (incomeTx + expenseTx).sortedByDescending { it.date }
     }
 
-    val incomeTotal = allTransactions.filter { it.type == "Income" }.sumOf { it.amount }
-    val expenseTotal = allTransactions.filter { it.type == "Expense" }.sumOf { it.amount }
+    val incomeTx = incomes
+        .filter { it.categoryName == categoryName }
+        .map {
+            TransactionUI(
+                id = it.id,
+                amount = it.amount,
+                date = it.date,
+                note = it.note,
+                categoryName = it.categoryName,
+                categoryEmoji = "💰",
+                type = "Income"
+            )
+        }.sortedByDescending { it.date }
+
+    val expenseTx = expenses
+        .filter { it.categoryName == categoryName }
+        .map {
+            TransactionUI(
+                id = it.id,
+                amount = it.amount,
+                date = it.date,
+                note = it.note,
+                categoryName = it.categoryName,
+                categoryEmoji = it.categoryEmoji,
+                type = "Expense"
+            )
+        }.sortedByDescending { it.date }
+
+    val incomeTotal = incomeTx.filter { it.type == "Income" }.sumOf { it.amount }
+    val expenseTotal = expenseTx.filter { it.type == "Expense" }.sumOf { it.amount }
 
     val leftAmount = incomeTotal - expenseTotal
 
@@ -848,21 +876,26 @@ fun TransactionBottomSheet(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Transactions - $categoryName",
-                fontSize = 20.sp,
+                text = categoryName,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = appColors().text
+                color = appColors().text,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Divider(
+                color = Color.LightGray,
+                thickness = 0.6.dp,
+                modifier = Modifier.padding(vertical = 4.dp, horizontal = 0.dp)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             if(incomeTotal > 0) {
-                Divider(
-                    color = Color.LightGray,
-                    thickness = 0.6.dp,
-                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 0.dp)
-                )
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -899,30 +932,51 @@ fun TransactionBottomSheet(
                         )
                     }
                 }
-
-                Divider(
-                    color = Color.LightGray,
-                    thickness = 0.6.dp,
-                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 0.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
 
-            if (allTransactions.isEmpty()) {
+            if (incomeTx.isEmpty() && expenseTx.isEmpty()) {
                 Text(
                     text = "No transactions found",
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
             } else {
-                LazyColumn(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    items(allTransactions) { item ->
-                        TransactionItem(item)
+                    Text(
+                        text = "Expenses",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().text
+                    )
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(expenseTx) { item ->
+                            TransactionItem(item)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Incomes",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().text
+                    )
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(incomeTx) { item ->
+                            TransactionItem(item)
+                        }
                     }
                 }
             }
@@ -996,47 +1050,82 @@ fun TransactionItem(txn: TransactionUI) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 14.dp),
+                .padding(vertical = 10.dp, horizontal = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = txn.note.ifBlank { txn.categoryName }. limit(16),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = appColors().text
-                )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (isExpense) Color.Red.copy(alpha = 0.15f) else Color(
+                                0xFF27C152
+                            ).copy(alpha = 0.2f)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
 
-                Text(
-                    text = formatDateForUI(txn.date),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Gray
-                )
+                    if (txn.categoryEmoji.isBlank()) {
+                        Text(
+                            text = txn.categoryName?.trim()?.firstOrNull()?.uppercase() ?: "",
+                            color = Color.White,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    } else {
+                        Text(
+                            text = txn.categoryEmoji,
+                            fontSize = 22.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column {
+                    Text(
+                        text = txn.note.ifBlank { txn.categoryName }.limit(16),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().text
+                    )
+
+                    Text(
+                        text = formatDateForUI(txn.date),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Gray
+                    )
+                }
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
+                if(isExpense) {
+                    Text(
+                        text = "-",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().red
+                    )
+                }else{
+                    Text(
+                        text = "+",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().green
+                    )
+                }
                 Text(
-                    text = "₹ ${txn.amount}",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W500,
+                    text = "₹${txn.amount}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
                     color = if (txn.type == "Income") appColors().green else appColors().red
-                )
-
-                Icon(
-                    imageVector = if (isExpense)
-                        Icons.Default.ArrowOutward
-                    else
-                        Icons.Default.ArrowOutward,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .size(16.dp)
-                        .rotate(if (!isExpense) 180f else 0f),
-                    tint = if (txn.type == "Income") appColors().green else appColors().red
                 )
             }
         }
