@@ -15,7 +15,7 @@
 </p>
 
 
-A beautifully designed **iOS Budget Tracker App** built with **SwiftUI** and **SwiftData**, helping users easily track their income, expenses, and spending trends — all synced securely via **iCloud**.  
+A beautifully designed **Android Budget Tracker App** built with **SwiftUI** and **SwiftData**, helping users easily track their income, expenses, and spending trends — all synced securely via **iCloud**.  
 
 ---
 
