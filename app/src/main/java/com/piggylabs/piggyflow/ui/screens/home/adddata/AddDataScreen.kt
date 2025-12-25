@@ -243,27 +243,21 @@ fun AddDataScreenComponent(navController: NavHostController, viewModel: HomeView
                                 pressedElevation = 5.dp,
                             ),
                             modifier = Modifier
-                                .height(36.dp),
+                                .padding(0.dp)
+                                .height(35.dp)
+                                .padding(0.dp),
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = appColors().green,
                                 contentColor = Color.White
                             ),
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = ""
-                                )
-                                Text(
-                                    text = "Add Category",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    color = Color.White
-                                )
-                            }
+                            Text(
+                                text = "Add Category",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.White
+                            )
                         }
                     }
 
@@ -608,27 +602,21 @@ fun AddDataScreenComponent(navController: NavHostController, viewModel: HomeView
                                 pressedElevation = 5.dp,
                             ),
                             modifier = Modifier
-                                .height(36.dp),
+                                .padding(0.dp)
+                                .height(35.dp)
+                                .padding(0.dp),
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = appColors().green,
                                 contentColor = Color.White
                             ),
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = ""
-                                )
-                                Text(
-                                    text = "Add Category",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    color = Color.White
-                                )
-                            }
+                            Text(
+                                text = "Add Category",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.White
+                            )
                         }
                     }
 

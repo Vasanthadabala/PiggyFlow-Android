@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,12 +30,16 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material.icons.filled.Balance
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -104,6 +109,13 @@ fun StatsScreen(navController: NavHostController, viewModel: HomeViewModel){
 @Composable
 fun StatsScreenComponent(viewModel: HomeViewModel) {
 
+    val isDark = isSystemInDarkTheme()
+
+    //DropDown
+    val typeOptions = listOf("Expense", "Income")
+    var selectedOption by remember { mutableStateOf("Expense") }
+    var optionsExpanded by remember { mutableStateOf(false) }
+
     //Bottom Sheet
     var showSheet by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
@@ -153,7 +165,27 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
         .sortedByDescending { it.amount }
         .take(5)
 
+    val groupedTopIncomes = selectedMonthIncome
+        .groupBy { it.categoryName }
+        .map { entry ->
+            val total = entry.value.sumOf { it.amount }
+            val emoji = entry.value.first().categoryEmoji
+
+            IncomeEntity(
+                id = 0, // dummy
+                amount = total,
+                note = "",
+                date = entry.value.first().date,
+                categoryName = entry.key,
+                categoryEmoji = emoji,
+                categoryType = "Income"
+            )
+        }
+        .sortedByDescending { it.amount }
+        .take(5)
+
     val totalTopExpenseAmount = groupedTopExpenses.sumOf { it.amount }
+    val totalTopIncomeAmount = groupedTopIncomes.sumOf { it.amount }
 
     //Balance Card
     val totalIncome = selectedMonthIncome.sumOf { it.amount }
@@ -167,7 +199,15 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
         .of(currentYear, selectedMonthIndex + 1)
         .lengthOfMonth()
 
-    val monthlyGraphData = (1..daysInMonth).map { day ->
+    val monthlyGraphDataIncomes = (1..daysInMonth).map { day ->
+        selectedMonthIncome
+            .filter {
+                java.time.LocalDate.parse(it.date).dayOfMonth == day
+            }
+            .sumOf { it.amount }
+    }
+
+    val monthlyGraphDataExpenses = (1..daysInMonth).map { day ->
         selectedMonthExpenses
             .filter {
                 java.time.LocalDate.parse(it.date).dayOfMonth == day
@@ -186,6 +226,75 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
             selectedMonthIndex = selectedMonthIndex,
             onMonthChange = { selectedMonthIndex = it }
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Box{
+                Box(
+                    modifier = Modifier
+                        .height(52.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(appColors().container)
+                        .clickable { optionsExpanded = true }
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = selectedOption,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = appColors().text
+                        )
+
+                        Icon(
+                            imageVector = if (optionsExpanded)
+                                Icons.Default.KeyboardArrowUp
+                            else
+                                Icons.Default.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = appColors().text
+                        )
+                    }
+                }
+
+                DropdownMenu(
+                    expanded = optionsExpanded,
+                    onDismissRequest = { optionsExpanded = false },
+                    shape = RoundedCornerShape(12.dp),
+                    containerColor = if (isDark) Color.Black.copy(alpha = 0.85f) else Color.LightGray.copy(
+                        alpha = 0.9f
+                    ),
+                    tonalElevation = 0.dp,
+                    shadowElevation = 0.dp
+                ) {
+                    typeOptions.forEach { option ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = option,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp,
+                                    color = appColors().text
+                                )
+                            },
+                            onClick = {
+                                selectedOption = option
+                                optionsExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -345,78 +454,137 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (groupedTopExpenses.isEmpty()){
-                Spacer(modifier = Modifier.height(128.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Storefront,
-                        contentDescription = "",
+            if (selectedOption == "Income") {
+                if (groupedTopIncomes.isEmpty()) {
+                    Spacer(modifier = Modifier.height(128.dp))
+                    Column(
                         modifier = Modifier
-                            .size(64.dp),
-                        tint = Color.Gray.copy(alpha = 0.5f)
-                    )
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Storefront,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(64.dp),
+                            tint = Color.Gray.copy(alpha = 0.5f)
+                        )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
+                        Text(
+                            text = "No transactions yet",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.W500,
+                            color = Color.Gray.copy(alpha = 0.8f)
+                        )
+                    }
+                } else {
+
+                    // ✅ Graph Card
                     Text(
-                        text = "No transactions yet",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.W500,
-                        color = Color.Gray.copy(alpha = 0.8f)
+                        text = "Monthly Income Trend",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = appColors().text
                     )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    LineChart(data = monthlyGraphDataIncomes)
+
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    // ✅ Top Expenses Header
+                    Text(
+                        text = "Top Incomes",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = appColors().text
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Column {
+                        groupedTopIncomes.forEach { income ->
+                            TopIncomeItem(
+                                income = income,
+                                totalAmount = totalTopIncomeAmount,
+                                onClick = {
+                                    selectedCategory = income.categoryName
+                                    showSheet = true
+                                }
+                            )
+                        }
+                    }
                 }
             } else {
 
-                // ✅ Graph Card
-                Text(
-                    text = "Monthly Spending Trend",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = appColors().text
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                LineChart(data = monthlyGraphData)
-
-                Spacer(modifier = Modifier.height(28.dp))
-
-                // ✅ Top Expenses Header
-                Text(
-                    text = "Top Spending Categories",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = appColors().text
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // ✅ Top Expenses List
-//        LazyColumn {
-//            items(topExpenses) { expense ->
-//                TopExpenseItem(
-//                    expense = expense,
-//                    totalAmount = totalTopExpenseAmount
-//                )
-//            }
-//        }
-
-                Column {
-                    groupedTopExpenses.forEach { expense ->
-                        TopExpenseItem(
-                            expense = expense,
-                            totalAmount = totalTopExpenseAmount,
-                            onClick = {
-                                selectedCategory = expense.categoryName
-                                showSheet = true
-                            }
+                if (groupedTopExpenses.isEmpty()) {
+                    Spacer(modifier = Modifier.height(128.dp))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Storefront,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(64.dp),
+                            tint = Color.Gray.copy(alpha = 0.5f)
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "No transactions yet",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.W500,
+                            color = Color.Gray.copy(alpha = 0.8f)
+                        )
+                    }
+                } else {
+
+                    // ✅ Graph Card
+                    Text(
+                        text = "Monthly Spending Trend",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = appColors().text
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    LineChart(data = monthlyGraphDataExpenses)
+
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    // ✅ Top Expenses Header
+                    Text(
+                        text = "Top Spending Categories",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = appColors().text
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Column {
+                        groupedTopExpenses.forEach { expense ->
+                            TopExpenseItem(
+                                expense = expense,
+                                totalAmount = totalTopExpenseAmount,
+                                onClick = {
+                                    selectedCategory = expense.categoryName
+                                    showSheet = true
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -647,6 +815,115 @@ fun LineChart(
     }
 }
 
+
+@Composable
+fun TopIncomeItem(income: IncomeEntity, totalAmount: Double, onClick: () -> Unit) {
+
+    val percentage =
+        if (totalAmount == 0.0) 0
+        else ((income.amount / totalAmount) * 100).toInt()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 0.dp, vertical = 4.dp)
+            .clickable {
+                onClick()   // 🔥 trigger sheet
+            },
+        shape = RoundedCornerShape(0.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(Color.Red.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "💰",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column{
+                    Row() {
+                        Text(
+                            text = income.categoryType,
+                            textAlign = TextAlign.Center,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = appColors().text
+                        )
+                        Text(
+                            text = " (${income.categoryName})",
+                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Gray
+                        )
+                    }
+
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(6.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Color.LightGray.copy(alpha = 0.4f))
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(fraction = percentage / 100f)
+                                .height(6.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(Color.Red)
+                        )
+                    }
+                }
+            }
+
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "₹ ${income.amount}",
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W500,
+                    color = appColors().text
+                )
+
+                Text(
+                    text = "$percentage%",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.W500,
+                    color = Color.Gray
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun TopExpenseItem(expense: ExpenseEntity, totalAmount: Double, onClick: () -> Unit) {

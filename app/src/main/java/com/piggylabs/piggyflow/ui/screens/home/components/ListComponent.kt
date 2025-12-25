@@ -1,6 +1,5 @@
 package com.piggylabs.piggyflow.ui.screens.home.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,31 +13,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.piggylabs.piggyflow.R
 import com.piggylabs.piggyflow.data.local.entity.ExpenseEntity
 import com.piggylabs.piggyflow.data.local.entity.IncomeEntity
 import com.piggylabs.piggyflow.ui.navigation.ListDataDetails
-import com.piggylabs.piggyflow.ui.navigation.Profile
 import com.piggylabs.piggyflow.ui.theme.appColors
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -57,12 +47,12 @@ fun ListComponent(navController: NavHostController, transaction: TransactionUi){
     val title = if (isExpense)
         transaction.data.categoryName
     else
-        "Income"
+        (transaction as TransactionUi.Income).data.categoryName.ifBlank { "Income" }
 
     val emoji = if (isExpense)
         transaction.data.categoryEmoji
     else
-        "💰"
+        (transaction as TransactionUi.Income).data.categoryEmoji.ifBlank { "💰" }
 
     val date = if (isExpense)
         transaction.data.date
@@ -116,7 +106,7 @@ fun ListComponent(navController: NavHostController, transaction: TransactionUi){
 
                     if (emoji.isBlank()) {
                         Text(
-                            text = title?.trim()?.firstOrNull()?.uppercase() ?: "",
+                            text = title.trim().firstOrNull()?.uppercase() ?: "",
                             color = Color.White,
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold

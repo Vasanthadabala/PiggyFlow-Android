@@ -1,8 +1,11 @@
 package com.piggylabs.piggyflow.ui.screens.home
 
+import android.app.DatePickerDialog
 import android.content.Context
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.NotificationsNone
@@ -72,10 +76,8 @@ import java.time.format.DateTimeFormatter
 
 enum class Category(val label: String) {
     FOOD("🍔 Food"),
-    MOVIE("🎬 Movie"),
-    OTT("📺 OTT"),
-    GROCERIES("🛒 Groceries"),
     HOME("🏠 Home"),
+    GROCERIES("🛒 Groceries"),
     TRANSPORT("🚌 Transport"),
     ENTERTAINMENT("🎉 Entertainment"),
     DRINKS("🍹 Drinks"),
@@ -84,6 +86,15 @@ enum class Category(val label: String) {
     PHONE("📱 Phone"),
     INTERNET("🌐 Internet"),
     FUEL("⛽ Fuel"),
+    SALARY("💼 Salary"),
+    BUSINESS("🏢 Business"),
+    FREELANCE("🧑‍💻 Freelance"),
+    INVESTMENTS("📈 Investments"),
+    RENTAL("🏠 Rental Income"),
+    INTEREST("💰 Interest"),
+    BONUS("🎁 Bonus"),
+    GIFTS("🎉 Gifts"),
+    REFUND("🔄 Refund"),
     OTHERS("🔖 Others");
 
     val emoji:String
@@ -174,6 +185,27 @@ fun HomeScreenComponent(navController: NavHostController, viewModel: HomeViewMod
     var selectedOption by remember { mutableStateOf("Month") }
     var optionsExpanded by remember { mutableStateOf(false) }
 
+    //Date picker
+    var showDatePicker by remember { mutableStateOf(false) }
+    var date by remember { mutableStateOf(LocalDate.now()) }
+    val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            date = LocalDate.of(year, month + 1, dayOfMonth)
+            selectedOption = "Month" //Auto Switch filter to month
+            showDatePicker = false
+        },
+        date.year,
+        date.monthValue - 1,
+        date.dayOfMonth
+    ).apply {
+        setOnDismissListener {
+            showDatePicker = false
+        }
+    }
+
     //transactions
     val transactions = remember(viewModel.expenses, viewModel.income) {
         val expenseList = viewModel.expenses.map { TransactionUi.Expense(it) }
@@ -191,10 +223,11 @@ fun HomeScreenComponent(navController: NavHostController, viewModel: HomeViewMod
     val filteredTransactions = remember(
         transactions,
         selectedOption,
-        search
+        search,
+        date
     ) {
 
-        val today = LocalDate.now()
+        val referenceDate = date
 
         transactions
             // ✅ Date Filter
@@ -207,9 +240,9 @@ fun HomeScreenComponent(navController: NavHostController, viewModel: HomeViewMod
                 val txnDate = parseDbDate(dateStr)
 
                 when (selectedOption) {
-                    "Day" -> isSameDay(txnDate, today)
-                    "Week" -> isSameWeek(txnDate, today)
-                    "Month" -> isSameMonth(txnDate, today)
+                    "Day" -> isSameDay(txnDate, referenceDate)
+                    "Week" -> isSameWeek(txnDate, referenceDate)
+                    "Month" -> isSameMonth(txnDate, referenceDate)
                     else -> true
                 }
             }
@@ -537,45 +570,44 @@ fun HomeScreenComponent(navController: NavHostController, viewModel: HomeViewMod
                     modifier = Modifier
                         .weight(0.35f)
                 ) {
-                    OutlinedTextField(
-                        value = selectedOption,
-                        onValueChange = {},
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(52.dp),
-                        readOnly = true,
-                        shape = RoundedCornerShape(20),
-                        colors = TextFieldDefaults.colors(
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            focusedContainerColor = appColors().container,
-                            unfocusedContainerColor = appColors().container,
-                            cursorColor = Color.Transparent
-                        ),
-                        textStyle = TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 15.sp,
-                            color = appColors().text,
-                            textAlign = TextAlign.Start
-                        ),
-                        trailingIcon = {
+                            .height(52.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(appColors().container)
+                            .clickable { optionsExpanded = true }
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = selectedOption,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = appColors().text
+                            )
+
                             Icon(
                                 imageVector = if (optionsExpanded)
                                     Icons.Default.KeyboardArrowUp
                                 else
                                     Icons.Default.KeyboardArrowDown,
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .clickable{optionsExpanded = true},
                                 tint = appColors().text
                             )
                         }
-                    )
+                    }
+
                     DropdownMenu(
                         expanded = optionsExpanded,
                         onDismissRequest = { optionsExpanded = false },
                         shape = RoundedCornerShape(12.dp),
-                        containerColor = if (isDark) Color.Black.copy(alpha = 0.8f) else Color.LightGray.copy(alpha = 0.9f),
+                        containerColor = if (isDark) Color.Black.copy(alpha = 0.85f) else Color.LightGray.copy(alpha = 0.9f),
                         tonalElevation = 0.dp,
                         shadowElevation = 0.dp
                     ) {
@@ -598,6 +630,68 @@ fun HomeScreenComponent(navController: NavHostController, viewModel: HomeViewMod
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Calender",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = appColors().text
+                    )
+
+                    Card(
+                        modifier = Modifier
+                            .clickable {
+                                if (!showDatePicker) {  // Only open if not already showing
+                                    showDatePicker = true
+                                    datePickerDialog.show()
+                                }
+                            },
+
+                        colors = CardDefaults.cardColors(
+                            containerColor = appColors().container
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 6.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = date.format(dateFormatter),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.W600,
+                                color = appColors().text
+                            )
+
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Select date",
+                                tint = appColors().text,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             if (transactions.isEmpty()){
                 Column(

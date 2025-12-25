@@ -11,6 +11,7 @@ import com.piggylabs.piggyflow.data.local.entity.ExpenseEntity
 import com.piggylabs.piggyflow.data.local.entity.IncomeEntity
 import com.piggylabs.piggyflow.data.local.entity.UserCategoryEntity
 import com.piggylabs.piggyflow.data.local.repository.UserRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application): AndroidViewModel(application){
@@ -24,12 +25,6 @@ class HomeViewModel(application: Application): AndroidViewModel(application){
         private set
 
     var income by mutableStateOf<List<IncomeEntity>>(emptyList())
-        private set
-
-    var selectedExpense by mutableStateOf<ExpenseEntity?>(null)
-        private set
-
-    var selectedIncome by mutableStateOf<IncomeEntity?>(null)
         private set
 
     init {
@@ -51,8 +46,6 @@ class HomeViewModel(application: Application): AndroidViewModel(application){
             categories = emptyList()
             expenses = emptyList()
             income = emptyList()
-            selectedExpense = null
-            selectedIncome = null
 
             // 2) Recreate repository (so any DAO references inside repo use new Room instance)
             repo = UserRepository(getApplication())
@@ -93,21 +86,15 @@ class HomeViewModel(application: Application): AndroidViewModel(application){
     }
 
     //Observe Data By Id
-    fun observeExpenseById(id: Int) {
-        viewModelScope.launch {
-            repo.observeExpenseById(id).collect {
-                selectedExpense = it
-            }
-        }
+    // direct Flow returns
+    fun observeExpenseById(id: Int): Flow<ExpenseEntity?> {
+        return repo.observeExpenseById(id)
     }
 
-    fun observeIncomeById(id: Int) {
-        viewModelScope.launch {
-            repo.observeIncomeById(id).collect {
-                selectedIncome = it
-            }
-        }
+    fun observeIncomeById(id: Int): Flow<IncomeEntity?> {
+        return repo.observeIncomeById(id)
     }
+
 
     //Add Data
     fun addExpense(
@@ -195,10 +182,5 @@ class HomeViewModel(application: Application): AndroidViewModel(application){
     // ✅ DELETE CATEGORY
     fun deleteCategoryById(id: Int) = viewModelScope.launch {
         repo.deleteCategoryById(id)
-    }
-
-    fun clearSelected() {
-        selectedExpense = null
-        selectedIncome = null
     }
 }

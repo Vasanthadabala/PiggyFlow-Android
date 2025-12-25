@@ -17,8 +17,8 @@ android {
         applicationId = "com.piggylabs.piggyflow"
         minSdk = 28
         targetSdk = 36
-        versionCode = 11
-        versionName = "1.0.11"
+        versionCode = 17
+        versionName = "1.0.17"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -91,6 +91,10 @@ dependencies {
 
     //Gson
     implementation("com.google.http-client:google-http-client-gson:1.43.3")
+
+    //In App Update
+    implementation ("com.google.android.play:app-update:2.1.0")
+    implementation ("com.google.android.play:app-update-ktx:2.1.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

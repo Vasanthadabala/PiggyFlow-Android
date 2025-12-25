@@ -42,6 +42,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -94,20 +95,15 @@ fun ListDataDetailsScreenComponent(navController: NavHostController, viewModel: 
 
     val id = listID.toInt()
 
-    val expense = viewModel.selectedExpense
-    val income = viewModel.selectedIncome
+    Log.d("ListDataDetailsScreen", "$id")
+
+    val expenses by viewModel.observeExpenseById(id).collectAsState(initial = null)
+    val incomes by viewModel.observeIncomeById(id).collectAsState(initial = null)
+
+    val expense = if (type == "expense") expenses else null
+    val income = if (type == "income") incomes else null
 
     val isExpense = expense != null
-
-    LaunchedEffect(id, type) {
-        viewModel.clearSelected()
-
-        if (type == "expense") {
-            viewModel.observeExpenseById(id)
-        } else {
-            viewModel.observeIncomeById(id)
-        }
-    }
 
     if (expense == null && income == null) {
         Box(
@@ -119,9 +115,8 @@ fun ListDataDetailsScreenComponent(navController: NavHostController, viewModel: 
         return
     }
 
-    val title = if (isExpense) expense.categoryName else income?.categoryType ?: ""
-    val title2 = if (isExpense) "" else income?.categoryName ?: ""
-    val emoji = if (isExpense) expense.categoryEmoji else "💰"
+    val title = if (isExpense) expense.categoryName else income?.categoryName?.ifBlank { "Income" } ?: "Income"
+    val emoji = if (isExpense) expense.categoryEmoji else income?.categoryEmoji?.ifBlank { "💰" } ?: "💰"
     val amount = if (isExpense) expense.amount else income!!.amount
     val note = if (isExpense) expense.note else income!!.note
     val date = if (isExpense) expense.date else income!!.date
@@ -172,24 +167,12 @@ fun ListDataDetailsScreenComponent(navController: NavHostController, viewModel: 
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Text(
-                        text = title,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.W600,
-                        color = appColors().text
-                    )
-                    if(!title2.isBlank()) {
-                        Text(
-                            text = " ($title2)",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.W500,
-                            color = Color.Gray
-                        )
-                    }
-                }
+                Text(
+                    text = title,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.W600,
+                    color = appColors().text
+                )
 
             }
 
@@ -425,7 +408,7 @@ fun ListDataDetailsScreenComponent(navController: NavHostController, viewModel: 
                             contentDescription = "",
                             tint = Color.White,
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(22.dp)
                         )
                     }
                 }
