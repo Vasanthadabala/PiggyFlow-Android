@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.piggylabs.piggyflow.ui.navigation.components.TopBar
+import com.piggylabs.piggyflow.navigation.components.TopBar
 import com.piggylabs.piggyflow.ui.theme.appColors
 
 @ExperimentalMaterial3Api

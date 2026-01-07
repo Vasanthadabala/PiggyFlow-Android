@@ -60,7 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.piggylabs.piggyflow.R
-import com.piggylabs.piggyflow.ui.navigation.Home
+import com.piggylabs.piggyflow.navigation.Home
 import com.piggylabs.piggyflow.ui.theme.appColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

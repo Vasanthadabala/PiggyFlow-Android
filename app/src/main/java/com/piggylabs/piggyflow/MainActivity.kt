@@ -18,7 +18,7 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.piggylabs.piggyflow.ui.navigation.AppNavigation
+import com.piggylabs.piggyflow.navigation.AppNavigation
 import com.piggylabs.piggyflow.ui.theme.PiggyFlowTheme
 import com.piggylabs.piggyflow.ui.theme.appColors
 

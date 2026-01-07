@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.piggylabs.piggyflow.data.local.entity.ExpenseEntity
 import com.piggylabs.piggyflow.data.local.entity.IncomeEntity
-import com.piggylabs.piggyflow.ui.navigation.ListDataDetails
+import com.piggylabs.piggyflow.navigation.TransactionDetail
 import com.piggylabs.piggyflow.ui.theme.appColors
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -78,7 +78,7 @@ fun ListComponent(navController: NavHostController, transaction: TransactionUi){
                 else
                     (transaction as TransactionUi.Income).data.id
 
-                navController.navigate("${ListDataDetails.route}/$type/$id"){
+                navController.navigate("${TransactionDetail.route}/$type/$id"){
                     launchSingleTop = true
                 }
             },

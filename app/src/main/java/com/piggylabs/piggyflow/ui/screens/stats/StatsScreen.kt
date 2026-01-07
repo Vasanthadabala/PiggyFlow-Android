@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -68,10 +67,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.piggylabs.piggyflow.data.local.entity.ExpenseEntity
 import com.piggylabs.piggyflow.data.local.entity.IncomeEntity
-import com.piggylabs.piggyflow.ui.components.utils.generateTransactionPdf
-import com.piggylabs.piggyflow.ui.navigation.components.BottomBar
+import com.piggylabs.piggyflow.utils.generateTransactionPdf
+import com.piggylabs.piggyflow.navigation.components.BottomBar
 import com.piggylabs.piggyflow.ui.screens.home.components.formatDateForUI
-import com.piggylabs.piggyflow.ui.screens.home.details.limit
+import com.piggylabs.piggyflow.ui.screens.transaction_detail.limit
 import com.piggylabs.piggyflow.ui.screens.home.viewmodel.HomeViewModel
 import com.piggylabs.piggyflow.ui.theme.appColors
 import kotlinx.coroutines.delay

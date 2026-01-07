@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.piggylabs.piggyflow.R
 import com.piggylabs.piggyflow.data.remote.SyncViewModel
-import com.piggylabs.piggyflow.ui.navigation.About
-import com.piggylabs.piggyflow.ui.navigation.Sync
-import com.piggylabs.piggyflow.ui.navigation.components.BottomBar
+import com.piggylabs.piggyflow.navigation.About
+import com.piggylabs.piggyflow.navigation.Sync
+import com.piggylabs.piggyflow.navigation.components.BottomBar
 import com.piggylabs.piggyflow.ui.theme.appColors
 
 @Composable
