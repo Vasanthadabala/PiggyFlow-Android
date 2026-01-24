@@ -3,6 +3,9 @@ package com.piggylabs.piggyflow.ui.screens.onboarding
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +19,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -97,11 +103,53 @@ fun OnBoardingScreenComponent(navController: NavHostController){
 
     var isLoading by remember { mutableStateOf(false) }
 
+
+    /* Pager Text Effect */
+    val messages = listOf(
+        "Track your daily expenses easily",
+        "Visualize your spending habits",
+        "Save smarter & grow financially"
+    )
+
+    val pagerState = rememberPagerState { messages.size }
+
+    /* Pager Text */
+    LaunchedEffect(Unit) {
+        while(true){
+            delay(1000L)
+            val nextPage = (pagerState.currentPage +  1) % messages.size
+            pagerState.animateScrollToPage(nextPage)
+        }
+    }
+
+
+
+    /* Bottom Sheet */
     LaunchedEffect(userNameBottomSheetState.isVisible) {
         if (!userNameBottomSheetState.isVisible){
             showUserNameBottomSheet = false
         }
     }
+
+
+    /* Wallet drop animation */
+    val walletOffsetY = remember { Animatable(-400f) }
+
+    LaunchedEffect(Unit) {
+
+        delay(100L)
+
+        // Wallet drop
+        walletOffsetY.animateTo(
+            targetValue = 0f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
+    }
+
+
 
     Column(
         modifier = Modifier
@@ -114,6 +162,9 @@ fun OnBoardingScreenComponent(navController: NavHostController){
             modifier = Modifier
                 .padding(32.dp)
                 .size(300.dp)
+                .graphicsLayer {
+                    translationY = walletOffsetY.value
+                }
                 .background(
                     color = appColors().container,
                     shape = CircleShape
@@ -132,16 +183,47 @@ fun OnBoardingScreenComponent(navController: NavHostController){
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            text = "Track your expenses, manage your  budget and stay in control of your money with ease.",
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Normal,
-            modifier = Modifier
-                .padding(2.dp)
-                .padding(12.dp),
-            color = appColors().text
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+            ) { page ->
+                Text(
+                    text = messages[page],
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    color = appColors().text
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Dots indicator
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                repeat(messages.size) { index ->
+                    val isSelected = pagerState.currentPage == index
+                    Box(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .size(if (isSelected) 10.dp else 6.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (isSelected) appColors().green else Color.LightGray
+                            )
+                    )
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -164,7 +246,7 @@ fun OnBoardingScreenComponent(navController: NavHostController){
             Text(
                 text = "Get Started",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth(),

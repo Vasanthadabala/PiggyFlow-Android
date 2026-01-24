@@ -271,13 +271,22 @@ fun HomeScreenComponent(navController: NavHostController, viewModel: HomeViewMod
             }
     }
 
+    val filteredIncome = filteredTransactions
+        .filterIsInstance<TransactionUi.Income>()
+        .sumOf { it.data.amount }
+
+    val filteredExpense = filteredTransactions
+        .filterIsInstance<TransactionUi.Expense>()
+        .sumOf { it.data.amount }
+
+    val filteredBalance = filteredIncome - filteredExpense
+
+
 
     //Balance Card
-    val totalIncome = viewModel.income.sumOf { it.amount }
-
-    val totalExpense = viewModel.expenses.sumOf { it.amount }
-
-    val leftBalance = totalIncome - totalExpense
+    val totalIncome = filteredIncome
+    val totalExpense = filteredExpense
+    val leftBalance = filteredBalance
 
 
     Column(

@@ -108,6 +108,8 @@ fun StatsScreen(navController: NavHostController, viewModel: HomeViewModel){
 @Composable
 fun StatsScreenComponent(viewModel: HomeViewModel) {
 
+    val context = LocalContext.current
+
     val isDark = isSystemInDarkTheme()
 
     //DropDown
@@ -236,7 +238,7 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
             Box{
                 Box(
                     modifier = Modifier
-                        .height(52.dp)
+                        .height(44.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(appColors().container)
                         .clickable { optionsExpanded = true }
@@ -249,7 +251,7 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
                     ) {
                         Text(
                             text = selectedOption,
-                            fontSize = 15.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             color = appColors().text
                         )
@@ -512,8 +514,12 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
                                 income = income,
                                 totalAmount = totalTopIncomeAmount,
                                 onClick = {
-                                    selectedCategory = income.categoryName
-                                    showSheet = true
+                                    if(income.categoryName.isNotBlank()) {
+                                        selectedCategory = income.categoryName
+                                        showSheet = true
+                                    }else{
+                                        Toast.makeText(context, "No Data", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             )
                         }
@@ -579,8 +585,10 @@ fun StatsScreenComponent(viewModel: HomeViewModel) {
                                 expense = expense,
                                 totalAmount = totalTopExpenseAmount,
                                 onClick = {
-                                    selectedCategory = expense.categoryName
-                                    showSheet = true
+                                    if(expense.categoryName.isNotBlank()) {
+                                        selectedCategory = expense.categoryName
+                                        showSheet = true
+                                    }
                                 }
                             )
                         }
@@ -863,23 +871,14 @@ fun TopIncomeItem(income: IncomeEntity, totalAmount: Double, onClick: () -> Unit
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Column{
-                    Row() {
-                        Text(
-                            text = income.categoryType,
-                            textAlign = TextAlign.Center,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = appColors().text
-                        )
-                        Text(
-                            text = " (${income.categoryName})",
-                            textAlign = TextAlign.Center,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.Gray
-                        )
-                    }
 
+                    Text(
+                        text = income.categoryName.ifBlank { "Income" },
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = appColors().text
+                    )
 
                     Spacer(modifier = Modifier.height(2.dp))
 
