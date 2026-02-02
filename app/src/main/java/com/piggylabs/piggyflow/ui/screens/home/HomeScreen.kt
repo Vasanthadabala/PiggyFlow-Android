@@ -174,7 +174,7 @@ fun HomeScreenComponent(navController: NavHostController, viewModel: HomeViewMod
 
     val sharedPreferences = context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
 
-    val userName = sharedPreferences.getString("userName","")
+    val userName = sharedPreferences.getString("userName","Guest")
     val greetings by remember { mutableStateOf( getGreetingByTime()) }
 
     //Search and Filter

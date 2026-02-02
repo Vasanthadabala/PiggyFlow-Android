@@ -9,9 +9,13 @@ import androidx.navigation.compose.rememberNavController
 import com.piggylabs.piggyflow.data.remote.SyncViewModel
 import com.piggylabs.piggyflow.navigation.graphs.aboutScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.addDataScreenGraph
+import com.piggylabs.piggyflow.navigation.graphs.auth.forgotScreenGraph
+import com.piggylabs.piggyflow.navigation.graphs.auth.signInScreenGraph
+import com.piggylabs.piggyflow.navigation.graphs.auth.signUpScreenGraph
+import com.piggylabs.piggyflow.navigation.graphs.dashboard.accountTypeSelectionScreenGraph
+import com.piggylabs.piggyflow.navigation.graphs.dashboard.onBoardingScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.homeScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.notificationScreenGraph
-import com.piggylabs.piggyflow.navigation.graphs.onBoardingScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.profileScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.settingScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.statsScreenGraph
@@ -29,6 +33,11 @@ fun AppNavigation(context: Context){
     NavHost(navController = navController, startDestination = getStartDestination(context)){
 
         onBoardingScreenGraph(navController = navController)
+        accountTypeSelectionScreenGraph(navController = navController)
+
+        signInScreenGraph(navController = navController)
+        signUpScreenGraph(navController = navController)
+        forgotScreenGraph(navController = navController)
 
         homeScreenGraph(navController = navController, homeViewModel)
         addDataScreenGraph(navController = navController, homeViewModel)

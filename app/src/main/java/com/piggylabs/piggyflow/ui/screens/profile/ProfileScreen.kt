@@ -73,7 +73,7 @@ fun ProfileScreenComponent(){
     val sharedPreferences = context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
 
-    val userName = sharedPreferences.getString("userName","")
+    val userName = sharedPreferences.getString("userName","Guest")
 
     var name by remember { mutableStateOf(userName ?: "") }
     var editMode by remember { mutableStateOf( false ) }

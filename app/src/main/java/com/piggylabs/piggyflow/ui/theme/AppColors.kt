@@ -8,7 +8,8 @@ data class AppColors(
     val container: Color,
     val text: Color,
     val red: Color,
-    val green: Color
+    val green: Color,
+    val blue: Color
 )
 
 val LightAppColors = AppColors(
@@ -16,7 +17,8 @@ val LightAppColors = AppColors(
     container = Color.Gray.copy(alpha = 0.15f),
     text = Color.Black,
     red = Color.Red,
-    green = Color(0xFF27C152)
+    green = Color(0xFF27C152),
+    blue = Color(0XFF3f8efc)
 )
 
 val DarkAppColors = AppColors(
@@ -24,7 +26,8 @@ val DarkAppColors = AppColors(
     container = Color.Gray.copy(alpha = 0.2f),
     text = Color.White,
     red = Color.Red,
-    green = Color(0xFF27C152)
+    green = Color(0xFF27C152),
+    blue = Color(0XFF3f8efc)
 )
 
 val LocalAppColors = staticCompositionLocalOf { LightAppColors }
