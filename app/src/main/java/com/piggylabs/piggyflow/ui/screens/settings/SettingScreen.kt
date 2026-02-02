@@ -71,7 +71,7 @@ fun SettingScreenComponent(navController: NavHostController, viewModel: SyncView
     val isSignedIn by viewModel.isSignedIn.collectAsState()
 
     val sharedPreferences = context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
-    val userName = sharedPreferences.getString("userName","")
+    val userName = sharedPreferences.getString("userName","Guest")
 
     Column(
         modifier = Modifier

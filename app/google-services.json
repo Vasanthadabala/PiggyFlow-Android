@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "865793379065",
+    "project_id": "piggyflow-dbcc2",
+    "storage_bucket": "piggyflow-dbcc2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865793379065:android:f10bce35bd208d3e107028",
+        "android_client_info": {
+          "package_name": "com.piggylabs.piggyflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvtTvxR0MRfSFDaZBPur4me1E6Oee9Dfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("org.jetbrains.kotlin.plugin.serialization")
+
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -77,6 +80,14 @@ dependencies {
 
     // Google API Client for Drive (ADDED - correct way)
     implementation("com.google.api-client:google-api-client-android:2.2.0")
+
+    // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
+
+    // Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 
     // Ktor Client Dependencies
     implementation("io.ktor:ktor-client-cio:2.3.4") // CIO engine

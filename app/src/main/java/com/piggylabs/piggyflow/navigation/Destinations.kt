@@ -4,9 +4,27 @@ interface Destinations{
     val route: String
 }
 
+
 object OnBoarding: Destinations{
     override val route = "OnBoarding"
 }
+object AccountType: Destinations{
+    override val route = "AccountType"
+}
+
+/* Auth */
+object SignIn: Destinations{
+    override val route = "SignIn"
+}
+
+object SignUp: Destinations{
+    override val route = "SignUp"
+}
+
+object Forgot: Destinations{
+    override val route = "Forgot"
+}
+
 
 object Home: Destinations{
     override val route = "Home"
