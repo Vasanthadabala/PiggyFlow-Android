@@ -6,12 +6,11 @@ import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.piggylabs.piggyflow.data.remote.SyncViewModel
 import com.piggylabs.piggyflow.navigation.Settings
 import com.piggylabs.piggyflow.ui.screens.settings.SettingScreen
 
 
-fun NavGraphBuilder.settingScreenGraph(navController: NavHostController, viewModel: SyncViewModel) {
+fun NavGraphBuilder.settingScreenGraph(navController: NavHostController) {
 
     composable(
         route = Settings.route,
@@ -23,6 +22,6 @@ fun NavGraphBuilder.settingScreenGraph(navController: NavHostController, viewMod
             )
         }
     ) {
-        SettingScreen(navController, viewModel)
+        SettingScreen(navController)
     }
 }

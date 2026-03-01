@@ -13,6 +13,10 @@ object AccountType: Destinations{
 }
 
 /* Auth */
+
+object LoginOptions: Destinations{
+    override val route = "LoginOptions"
+}
 object SignIn: Destinations{
     override val route = "SignIn"
 }

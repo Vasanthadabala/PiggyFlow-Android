@@ -1,12 +1,8 @@
 package com.piggylabs.piggyflow.ui.screens.auth
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -14,7 +10,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +24,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -55,10 +49,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -69,19 +61,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.piggylabs.piggyflow.R
 import com.piggylabs.piggyflow.navigation.Forgot
 import com.piggylabs.piggyflow.navigation.Home
 import com.piggylabs.piggyflow.navigation.SignUp
 import com.piggylabs.piggyflow.navigation.components.TopBar
 import com.piggylabs.piggyflow.ui.theme.appColors
-
-private const val WEB_CLIENT_ID = "865793379065-nn8bn1ao72ifevedtja36hu5rh32bh3m.apps.googleusercontent.com"
 
 @ExperimentalMaterial3Api
 @Composable
@@ -115,146 +101,11 @@ fun SignInScreenComponent(navController: NavHostController){
     val accountType = sharedPref.getString("account_type", "personal")
     val editor = sharedPref.edit()
 
-    /* ---------------- ONE TAP SETUP ---------------- */
-
-    val oneTapClient = Identity.getSignInClient(context)
-
-    val oneTapLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartIntentSenderForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val credential =
-                oneTapClient.getSignInCredentialFromIntent(result.data)
-            val idToken = credential.googleIdToken
-
-            if (idToken != null) {
-                firebaseAuthWithGoogle(
-                    idToken = idToken,
-                    navController = navController,
-                    context = context
-                )
-            }
-        }
-    }
-
-    fun launchOneTap() {
-        Log.d("ONE_TAP", "Trying SIGN-IN flow")
-
-        oneTapClient.beginSignIn(buildSignInRequest())
-            .addOnSuccessListener { result ->
-                oneTapLauncher.launch(
-                    IntentSenderRequest.Builder(result.pendingIntent).build()
-                )
-            }
-            .addOnFailureListener { e ->
-                Log.w("ONE_TAP", "Sign-in failed, trying SIGN-UP", e)
-
-                // 🔥 FALLBACK TO SIGN-UP FLOW
-                oneTapClient.beginSignIn(buildSignUpRequest())
-                    .addOnSuccessListener { result ->
-                        oneTapLauncher.launch(
-                            IntentSenderRequest.Builder(result.pendingIntent).build()
-                        )
-                    }
-                    .addOnFailureListener { ex ->
-                        Log.e("ONE_TAP", "Both One Tap flows failed", ex)
-                        Toast.makeText(
-                            context,
-                            "Google Sign-in unavailable",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-            }
-    }
 
 
-    /* ---------------- SKIP BUTTON ANIMATION ---------------- */
-
-    val infiniteTransition = rememberInfiniteTransition(label = "skip_anim")
-
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 1400,
-                easing = FastOutSlowInEasing
-            ),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "scale"
-    )
-
-    val arrowOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 10f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 700,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "arrow"
-    )
 
 
     Box {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-
-            Card(
-                modifier = Modifier
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                    }
-                    .clickable {
-                        editor.putBoolean("is_logged_in", true)
-                        editor.apply()
-
-                        navController.navigate(Home.route) {
-                            popUpTo(navController.graph.id) { inclusive = true }
-                        }
-                    },
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = appColors().green,
-                    contentColor = Color.White
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-            ) {
-            Row(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp, vertical = 6.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Skip",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                    Icon(
-                        imageVector = Icons.Default.KeyboardDoubleArrowRight,
-                        contentDescription = "Skip",
-                        modifier = Modifier
-                            .size(22.dp)
-                            .graphicsLayer {
-                                translationX = arrowOffset
-                            }
-                    )
-                }
-            }
-        }
 
         Column(
             modifier = Modifier
@@ -511,53 +362,6 @@ fun SignInScreenComponent(navController: NavHostController){
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 4.dp)
-                    .clickable{
-                        launchOneTap()
-                    },
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = appColors().container
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-            ) {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp, horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Card(
-                        shape = CircleShape
-                    ) {
-
-                        Image(
-                            painter = painterResource(id = R.drawable.google),
-                            contentDescription = "",
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .size(22.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Text(
-                        text = "Sign in with Google",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = appColors().text
-                    )
-                }
-            }
-
             Spacer(modifier = Modifier.height(32.dp))
 
             Row(
@@ -632,70 +436,5 @@ fun fetchUserProfile(
         }
         .addOnFailureListener { e ->
             onError(e.message ?: "Failed to fetch profile")
-        }
-}
-
-/* ---------------- HELPERS ---------------- */
-
-private fun buildSignInRequest(): BeginSignInRequest {
-    return BeginSignInRequest.builder()
-        .setGoogleIdTokenRequestOptions(
-            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                .setSupported(true)
-                .setServerClientId(WEB_CLIENT_ID)
-                .setFilterByAuthorizedAccounts(true) // 👈 IMPORTANT
-                .build()
-        )
-        .setAutoSelectEnabled(false)
-        .build()
-}
-
-
-private fun buildSignUpRequest(): BeginSignInRequest {
-    return BeginSignInRequest.builder()
-        .setGoogleIdTokenRequestOptions(
-            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                .setSupported(true)
-                .setServerClientId(WEB_CLIENT_ID)
-                .setFilterByAuthorizedAccounts(false) // 👈 SHOW ALL ACCOUNTS
-                .build()
-        )
-        .setAutoSelectEnabled(false)
-        .build()
-}
-
-private fun firebaseAuthWithGoogle(
-    idToken: String,
-    navController: NavHostController,
-    context: Context
-) {
-    val credential = GoogleAuthProvider.getCredential(idToken, null)
-
-    FirebaseAuth.getInstance()
-        .signInWithCredential(credential)
-        .addOnSuccessListener { result ->
-            val user = result.user ?: return@addOnSuccessListener
-            val db = FirebaseFirestore.getInstance()
-            val ref = db.collection("users").document(user.uid)
-
-            ref.get().addOnSuccessListener { doc ->
-                if (!doc.exists()) {
-                    ref.set(
-                        mapOf(
-                            "uid" to user.uid,
-                            "email" to user.email,
-                            "userName" to (user.displayName ?: "User"),
-                            "createdAt" to System.currentTimeMillis()
-                        )
-                    )
-                }
-
-                navController.navigate(Home.route) {
-                    popUpTo(navController.graph.id) { inclusive = true }
-                }
-            }
-        }
-        .addOnFailureListener {
-            Toast.makeText(context, "Google sign-in failed", Toast.LENGTH_SHORT).show()
         }
 }

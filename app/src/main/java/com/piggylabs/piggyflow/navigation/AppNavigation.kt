@@ -6,10 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.piggylabs.piggyflow.data.remote.SyncViewModel
 import com.piggylabs.piggyflow.navigation.graphs.aboutScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.addDataScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.auth.forgotScreenGraph
+import com.piggylabs.piggyflow.navigation.graphs.auth.loginOptionsScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.auth.signInScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.auth.signUpScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.dashboard.accountTypeSelectionScreenGraph
@@ -19,7 +19,6 @@ import com.piggylabs.piggyflow.navigation.graphs.notificationScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.profileScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.settingScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.statsScreenGraph
-import com.piggylabs.piggyflow.navigation.graphs.syncScreenGraph
 import com.piggylabs.piggyflow.navigation.graphs.transactionDetailScreenScreenGraph
 import com.piggylabs.piggyflow.ui.screens.home.viewmodel.HomeViewModel
 
@@ -27,7 +26,6 @@ import com.piggylabs.piggyflow.ui.screens.home.viewmodel.HomeViewModel
 @Composable
 fun AppNavigation(context: Context){
     val navController = rememberNavController()
-    val syncViewModel: SyncViewModel = viewModel()
     val homeViewModel: HomeViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = getStartDestination(context)){
@@ -35,6 +33,7 @@ fun AppNavigation(context: Context){
         onBoardingScreenGraph(navController = navController)
         accountTypeSelectionScreenGraph(navController = navController)
 
+        loginOptionsScreenGraph(navController = navController)
         signInScreenGraph(navController = navController)
         signUpScreenGraph(navController = navController)
         forgotScreenGraph(navController = navController)
@@ -47,8 +46,7 @@ fun AppNavigation(context: Context){
 
         statsScreenGraph(navController = navController, homeViewModel)
 
-        settingScreenGraph(navController = navController, syncViewModel)
-        syncScreenGraph(navController =  navController, syncViewModel)
+        settingScreenGraph(navController = navController)
         aboutScreenGraph(navController = navController)
 
     }
