@@ -12,7 +12,20 @@
           "package_name": "com.piggylabs.piggyflow"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "865793379065-vd05fa8p87ie5c6soam3i0oathrc2bat.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.piggylabs.piggyflow",
+            "certificate_hash": "ab4163400e495eff5558095a1877c98da9abccdf"
+          }
+        },
+        {
+          "client_id": "865793379065-h7rluo6mdp05t4qlmeo9gtgmssf1d9pg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDvtTvxR0MRfSFDaZBPur4me1E6Oee9Dfw"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865793379065-h7rluo6mdp05t4qlmeo9gtgmssf1d9pg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

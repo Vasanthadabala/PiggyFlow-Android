@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.piggylabs.piggyflow.navigation.OnBoarding
-import com.piggylabs.piggyflow.ui.screens.onboarding.OnBoardingScreen
+import com.piggylabs.piggyflow.ui.screens.common.onboarding.OnBoardingScreen
 
 @ExperimentalMaterial3Api
 fun NavGraphBuilder.onBoardingScreenGraph(navController: NavHostController) {

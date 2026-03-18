@@ -31,3 +31,34 @@ data class IncomeEntity(
     val categoryName: String,
     val categoryEmoji: String
 )
+
+@Entity(tableName = "subscription")
+data class SubscriptionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val type: String,
+    val name: String,
+    val subType: String,
+    val amount: Double,
+    val dueDate: String,
+    val logoUrl: String = ""
+)
+
+@Entity(tableName = "business_party")
+data class BusinessPartyEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val name: String,
+    val phone: String,
+    val address: String = "",
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "business_entry")
+data class BusinessEntryEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val partyId: Int,
+    val type: String,
+    val amount: Double,
+    val note: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+)

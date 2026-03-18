@@ -8,8 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.piggylabs.piggyflow.navigation.AddData
-import com.piggylabs.piggyflow.ui.screens.adddata.AddDataScreen
-import com.piggylabs.piggyflow.ui.screens.home.viewmodel.HomeViewModel
+import com.piggylabs.piggyflow.ui.screens.personal.adddata.AddDataScreen
+import com.piggylabs.piggyflow.ui.screens.personal.home.viewmodel.HomeViewModel
 
 
 @ExperimentalMaterial3Api

@@ -20,8 +20,8 @@ android {
         applicationId = "com.piggylabs.piggyflow"
         minSdk = 28
         targetSdk = 36
-        versionCode = 19
-        versionName = "1.0.19"
+        versionCode = 20
+        versionName = "1.0.20"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -68,6 +68,9 @@ dependencies {
     implementation("androidx.compose.material:material:1.10.0")
     implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation("io.coil-kt.coil3:coil-svg:3.3.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
 
     //RoomDatabase
     implementation("androidx.room:room-runtime:2.8.4")
@@ -109,6 +112,9 @@ dependencies {
 
     //SplashScreen
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

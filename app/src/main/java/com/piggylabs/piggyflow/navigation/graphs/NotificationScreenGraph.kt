@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.piggylabs.piggyflow.navigation.Notification
-import com.piggylabs.piggyflow.ui.screens.notification.NotificationScreen
+import com.piggylabs.piggyflow.ui.screens.common.notification.NotificationScreen
 
 
 @ExperimentalMaterial3Api

@@ -13,6 +13,9 @@ object AccountType: Destinations{
 }
 
 /* Auth */
+object LoginOptions: Destinations{
+    override val route = "LoginOptions"
+}
 object SignIn: Destinations{
     override val route = "SignIn"
 }
@@ -30,6 +33,15 @@ object Home: Destinations{
     override val route = "Home"
 }
 
+object BusinessHome: Destinations{
+    override val route = "BusinessHome"
+}
+
+object BusinessPartyDetail: Destinations{
+    override val route = "BusinessPartyDetail"
+    const val partyId = "partyId"
+}
+
 object AddData: Destinations{
     override val route = "AddData"
 }
@@ -42,6 +54,10 @@ object TransactionDetail: Destinations{
 
 object Stats: Destinations{
     override val route = "Stats"
+}
+
+object Tracker: Destinations{
+    override val route = "Tracker"
 }
 
 object Settings: Destinations{

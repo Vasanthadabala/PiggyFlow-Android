@@ -8,9 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.piggylabs.piggyflow.navigation.AccountType
-import com.piggylabs.piggyflow.ui.screens.auth.SignInScreen
-import com.piggylabs.piggyflow.ui.screens.onboarding.AccountTypeScreen
-import com.piggylabs.piggyflow.ui.screens.onboarding.AccountTypeScreenComponent
+import com.piggylabs.piggyflow.ui.screens.common.onboarding.AccountTypeScreen
 
 
 @ExperimentalMaterial3Api
