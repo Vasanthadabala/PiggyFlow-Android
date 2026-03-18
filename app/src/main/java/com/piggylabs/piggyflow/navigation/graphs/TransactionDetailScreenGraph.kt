@@ -10,8 +10,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.piggylabs.piggyflow.navigation.TransactionDetail
-import com.piggylabs.piggyflow.ui.screens.home.viewmodel.HomeViewModel
-import com.piggylabs.piggyflow.ui.screens.transaction_detail.TransactionDetailScreen
+import com.piggylabs.piggyflow.ui.screens.personal.home.viewmodel.HomeViewModel
+import com.piggylabs.piggyflow.ui.screens.personal.transaction_detail.TransactionDetailScreen
 
 
 @ExperimentalMaterial3Api

@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.piggylabs.piggyflow.navigation.Profile
-import com.piggylabs.piggyflow.ui.screens.profile.ProfileScreen
+import com.piggylabs.piggyflow.ui.screens.common.profile.ProfileScreen
 
 
 @ExperimentalMaterial3Api

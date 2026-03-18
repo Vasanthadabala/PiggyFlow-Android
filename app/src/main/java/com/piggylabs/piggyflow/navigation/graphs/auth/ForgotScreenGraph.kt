@@ -8,7 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.piggylabs.piggyflow.navigation.Forgot
-import com.piggylabs.piggyflow.ui.screens.auth.ForgotScreen
+import com.piggylabs.piggyflow.ui.screens.common.auth.ForgotScreen
 
 
 @ExperimentalMaterial3Api

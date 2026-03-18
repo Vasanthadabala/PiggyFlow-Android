@@ -8,23 +8,22 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.piggylabs.piggyflow.navigation.bottomBarItems
+import com.piggylabs.piggyflow.navigation.getAccountType
+import com.piggylabs.piggyflow.navigation.getBottomBarItems
 import com.piggylabs.piggyflow.ui.theme.appColors
 
 @Composable
 fun BottomBar(navController: NavHostController){
-    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+    val context = LocalContext.current
+    val bottomBarItems = getBottomBarItems(getAccountType(context))
     val currentRoute = navController.currentBackStackEntry?.destination?.route ?: ""
-    selectedItemIndex = bottomBarItems.indexOfFirst { it.route == currentRoute }
+    val selectedItemIndex = bottomBarItems.indexOfFirst { it.route == currentRoute }
 
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
@@ -40,12 +39,12 @@ fun BottomBar(navController: NavHostController){
                 NavigationBarItem(
                     selected = selectedItemIndex == index,
                     onClick = {
-                        selectedItemIndex = index
                         navController.navigate(item.route){
-                            popUpTo(item.route){
-                                inclusive = true
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
                             }
                             launchSingleTop = true
+                            restoreState = true
                         }
                     },
                     label = {

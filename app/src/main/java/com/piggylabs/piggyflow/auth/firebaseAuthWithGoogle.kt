@@ -3,11 +3,10 @@ package com.piggylabs.piggyflow.auth
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.piggylabs.piggyflow.navigation.Home
+import com.google.firebase.firestore.SetOptions
 
 fun firebaseAuthWithGoogle(
     idToken: String,
@@ -43,7 +42,7 @@ fun firebaseAuthWithGoogle(
             Log.d("FIRESTORE", "Providers=${user.providerData}")
 
             val sharedPref = context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
-            val accountType = sharedPref.getString("account_type", "personal")
+            val accountType = sharedPref.getString("account_type", "personal")?.lowercase() ?: "personal"
             Log.d("FIRESTORE", "Local accountType=$accountType")
 
             val db = FirebaseFirestore.getInstance()
@@ -64,7 +63,9 @@ fun firebaseAuthWithGoogle(
                             "uid" to user.uid,
                             "email" to user.email,
                             "userName" to (user.displayName ?: "User"),
+                            "userNames" to mapOf(accountType to (user.displayName ?: "User")),
                             "accountType" to accountType,
+                            "accountTypes" to listOf(accountType),
                             "createdAt" to System.currentTimeMillis()
                         )
 
@@ -85,29 +86,41 @@ fun firebaseAuthWithGoogle(
                             }
 
                     } else {
+                        val existingTypes = (doc.get("accountTypes") as? List<*>)
+                            ?.mapNotNull { it as? String }
+                            ?.map { it.lowercase() }
+                            ?.toMutableSet()
+                            ?: mutableSetOf()
+                        doc.getString("accountType")?.lowercase()?.let(existingTypes::add)
+                        existingTypes.add(accountType)
 
-                        val accountTypeFromDb = doc.getString("accountType")
-                        Log.d("FIRESTORE", "Firestore accountType=$accountTypeFromDb")
+                        val typedNames = doc.get("userNames") as? Map<*, *>
+                        val scopedName = typedNames?.get(accountType) as? String
+                        val resolvedName = scopedName
+                            ?: user.displayName
+                            ?: doc.getString("userName")
+                            ?: "User"
 
-                        if (accountTypeFromDb == null) {
-                            Log.d("FIRESTORE", "Updating missing accountType in Firestore")
-                            ref.update("accountType", accountType)
-                        }
+                        val updates = mapOf(
+                            "accountType" to accountType,
+                            "accountTypes" to existingTypes.toList(),
+                            "userNames.$accountType" to resolvedName,
+                            "updatedAt" to System.currentTimeMillis()
+                        )
 
-                        if (accountTypeFromDb == null || accountTypeFromDb == accountType) {
-                            Log.d("FIRESTORE", "✅ Account type matched, login allowed")
-                            editor.putBoolean("is_logged_in", true)
-                            editor.putString("uid", user.uid)
-                            editor.putString("userName", user.displayName ?: "User")
-                            editor.apply()
+                        ref.set(updates, SetOptions.merge())
+                            .addOnSuccessListener {
+                                editor.putBoolean("is_logged_in", true)
+                                editor.putString("uid", user.uid)
+                                editor.putString("userName", resolvedName)
+                                editor.apply()
 
-                            onSuccess(user.uid, user.displayName)
-                        } else {
-                            Log.e("FIRESTORE", "❌ Account type mismatch, login blocked")
-                            Toast.makeText(context, "Wrong Account Type", Toast.LENGTH_LONG).show()
-                            FirebaseAuth.getInstance().signOut()
-                            onFailure("Wrong Account Type")
-                        }
+                                onSuccess(user.uid, resolvedName)
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("FIRESTORE", "❌ Firestore account-type update failed", e)
+                                onFailure("Failed to update account type")
+                            }
                     }
                 }
                 .addOnFailureListener { e ->

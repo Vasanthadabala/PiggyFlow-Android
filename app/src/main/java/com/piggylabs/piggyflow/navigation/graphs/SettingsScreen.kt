@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.piggylabs.piggyflow.navigation.Settings
-import com.piggylabs.piggyflow.ui.screens.settings.SettingScreen
+import com.piggylabs.piggyflow.ui.screens.common.settings.SettingScreen
 
 
 fun NavGraphBuilder.settingScreenGraph(navController: NavHostController) {
