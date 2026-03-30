@@ -1,17 +1,16 @@
 # 💰 PiggyFlow - Budget Tracker App
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/dea4410a-365f-4937-a9bd-0af47d95e2b8" width="24%" />
-  <img src="https://github.com/user-attachments/assets/f4f40106-7d69-4db5-b47d-33ac6b73f420" width="24%" />
-  <img src="https://github.com/user-attachments/assets/d44aca49-08fb-4b65-b9c0-80f884bcc288" width="24%" />
-  <img src="https://github.com/user-attachments/assets/5ef4b298-8801-4351-bce7-211e41cfb703" width="24%" />
+  <img src="https://github.com/user-attachments/assets/527b6292-8647-4111-9f37-d436620ae479" width="24%" />
+  <img src="https://github.com/user-attachments/assets/f18d88a7-e014-47d6-ba73-fdf136c562a2" width="24%" />
+  <img src="https://github.com/user-attachments/assets/7a03397a-70f2-4432-8951-7f210b0e7d39" width="24%" />
+  <img src="https://github.com/user-attachments/assets/f7ed616e-97c9-494e-aeeb-98992b1f81f7" width="24%" />
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/cff15670-40fa-4afc-9c48-f51118a7132f" width="24%" />
-  <img src="https://github.com/user-attachments/assets/000d2c3b-e2e6-468b-81b4-30d3a614161a" width="24%" />
-  <img src="https://github.com/user-attachments/assets/3eaa1791-9ec5-4a93-bcd5-1304b36dc001" width="24%" />
-  <img src="https://github.com/user-attachments/assets/e6f89443-3101-479f-9d37-602e5fd8cee6" width="24%" />
+  <img src="https://github.com/user-attachments/assets/2a34c07c-14e6-4a00-aceb-733ee83cc0f8" width="24%" />
+  <img src="https://github.com/user-attachments/assets/ccd953c7-a9ca-479e-9010-b5df2af36882" width="24%" />
+  <img src="https://github.com/user-attachments/assets/b2f8c8be-46d5-4912-8347-eb446e47a0b1" width="24%" />
 </p>
 
 
