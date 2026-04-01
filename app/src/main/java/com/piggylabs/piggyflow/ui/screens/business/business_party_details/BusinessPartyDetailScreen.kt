@@ -538,7 +538,6 @@ private fun AddBusinessEntrySheet(
     onDismiss: () -> Unit,
     onSubmit: (Double, String) -> Unit
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     var amount by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
@@ -600,13 +599,7 @@ private fun AddBusinessEntrySheet(
                             cursorColor = appColors().text
                         ),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done // Use Done for the last field
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
+                            keyboardType = KeyboardType.Number
                         ),
                         leadingIcon = {
                             Box(
@@ -668,13 +661,7 @@ private fun AddBusinessEntrySheet(
                             cursorColor = appColors().text
                         ),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done // Use Done for the last field
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
+                            keyboardType = KeyboardType.Text
                         ),
                         leadingIcon = {
                             Box(

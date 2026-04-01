@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "865793379065-u8tf29j6u9gm9j7h3lg7np03s8dukfir.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.piggylabs.piggyflow",
+            "certificate_hash": "167caeb6622a563aac95937e26fa5b27e5265894"
+          }
+        },
+        {
           "client_id": "865793379065-vd05fa8p87ie5c6soam3i0oathrc2bat.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
