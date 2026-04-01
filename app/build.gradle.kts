@@ -20,8 +20,8 @@ android {
         applicationId = "com.piggylabs.piggyflow"
         minSdk = 28
         targetSdk = 36
-        versionCode = 20
-        versionName = "1.0.20"
+        versionCode = 22
+        versionName = "1.0.22"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

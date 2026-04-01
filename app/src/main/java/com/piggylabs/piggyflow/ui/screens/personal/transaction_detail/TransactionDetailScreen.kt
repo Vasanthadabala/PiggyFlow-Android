@@ -59,6 +59,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -421,6 +422,7 @@ fun TransactionDetailScreenComponent(navController: NavHostController, viewModel
                                             cursorColor = appColors().text
                                         ),
                                         keyboardOptions = KeyboardOptions(
+                                            keyboardType = KeyboardType.Number,
                                             imeAction = ImeAction.Done // Use Done for the last field
                                         ),
                                         keyboardActions = KeyboardActions(
@@ -502,12 +504,7 @@ fun TransactionDetailScreenComponent(navController: NavHostController, viewModel
                                             cursorColor = appColors().text
                                         ),
                                         keyboardOptions = KeyboardOptions(
-                                            imeAction = ImeAction.Done // Use Done for the last field
-                                        ),
-                                        keyboardActions = KeyboardActions(
-                                            onDone = {
-                                                keyboardController?.hide()
-                                            }
+                                            keyboardType = KeyboardType.Text
                                         ),
                                         textStyle = TextStyle(
                                             fontWeight = FontWeight.W500,
@@ -660,12 +657,7 @@ fun TransactionDetailScreenComponent(navController: NavHostController, viewModel
                                         cursorColor = appColors().text
                                     ),
                                     keyboardOptions = KeyboardOptions(
-                                        imeAction = ImeAction.Done // Use Done for the last field
-                                    ),
-                                    keyboardActions = KeyboardActions(
-                                        onDone = {
-                                            keyboardController?.hide()
-                                        }
+                                        keyboardType = KeyboardType.Number
                                     ),
                                     leadingIcon = {
                                         Box(
@@ -741,12 +733,7 @@ fun TransactionDetailScreenComponent(navController: NavHostController, viewModel
                                         cursorColor = appColors().text
                                     ),
                                     keyboardOptions = KeyboardOptions(
-                                        imeAction = ImeAction.Done // Use Done for the last field
-                                    ),
-                                    keyboardActions = KeyboardActions(
-                                        onDone = {
-                                            keyboardController?.hide()
-                                        }
+                                        keyboardType = KeyboardType.Text
                                     ),
                                     textStyle = TextStyle(
                                         fontWeight = FontWeight.W500,

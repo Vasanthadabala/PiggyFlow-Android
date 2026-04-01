@@ -445,58 +445,62 @@ fun AuthCard(
             )
 
             // Login Button
-            Button(
-                onClick = onLogin,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = appColors().green,
-                    contentColor = Color.White
-                ),
-            ) {
-                Text(
-                    text = "Login",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
+//            Button(
+//                onClick = onLogin,
+//                modifier = Modifier.fillMaxWidth(),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = appColors().green,
+//                    contentColor = Color.White
+//                ),
+//            ) {
+//                Text(
+//                    text = "Login",
+//                    fontSize = 15.sp,
+//                    fontWeight = FontWeight.Medium,
+//                    textAlign = TextAlign.Center,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                )
+//            }
 
             // Register Button
-            OutlinedButton(
-                onClick = onRegister,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Register",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                    color = appColors().text,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
+//            OutlinedButton(
+//                onClick = onRegister,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                Text(
+//                    text = "Register",
+//                    fontSize = 15.sp,
+//                    fontWeight = FontWeight.Medium,
+//                    textAlign = TextAlign.Center,
+//                    color = appColors().text,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                )
+//            }
 
             // Google Button (Spotify style)
             OutlinedButton(
                 onClick = onGoogleLogin,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.google),
                         contentDescription = "Google",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Continue with Google",
-                        fontSize = 15.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center,
                         color = appColors().text,

@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -54,10 +55,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -88,6 +91,8 @@ import com.piggylabs.piggyflow.data.local.entity.IncomeEntity
 import com.piggylabs.piggyflow.data.local.entity.SubscriptionEntity
 import com.piggylabs.piggyflow.data.local.entity.UserCategoryEntity
 import com.piggylabs.piggyflow.navigation.About
+import com.piggylabs.piggyflow.navigation.BusinessHome
+import com.piggylabs.piggyflow.navigation.Home
 import com.piggylabs.piggyflow.navigation.Profile
 import com.piggylabs.piggyflow.navigation.SignIn
 import com.piggylabs.piggyflow.navigation.components.BottomBar
@@ -96,6 +101,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import coil3.compose.SubcomposeAsyncImage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -107,6 +113,8 @@ private const val CLEARED_TRACKER_NOTIFICATION_KEY = "cleared_tracker_notificati
 private const val LAST_SYNCED_AT_KEY = "last_synced_at"
 private const val ACTIVE_DATA_UID_KEY = "active_data_uid"
 private const val ACTIVE_DATA_ACCOUNT_TYPE_KEY = "active_data_account_type"
+private const val PERSONAL_SIGNED_IN_UID_KEY = "personal_signed_in_uid"
+private const val BUSINESS_SIGNED_IN_UID_KEY = "business_signed_in_uid"
 
 @Composable
 fun SettingScreen(navController: NavHostController){
@@ -131,12 +139,29 @@ fun SettingScreenComponent(navController: NavHostController){
 
     val sharedPreferences = context.getSharedPreferences(SETTINGS_PREF, Context.MODE_PRIVATE)
     val userName = sharedPreferences.getString("userName","Guest")
-    val accountType = sharedPreferences.getString("account_type", "personal").orEmpty()
-    val email = FirebaseAuth.getInstance().currentUser?.email ?: "Not connected"
+    var accountType by remember {
+        mutableStateOf(sharedPreferences.getString("account_type", "personal").orEmpty())
+    }
     val lastSyncedAt = sharedPreferences.getLong(LAST_SYNCED_AT_KEY, 0L)
 
     var isSignedIn by remember {
-        mutableStateOf(FirebaseAuth.getInstance().currentUser != null)
+        mutableStateOf(
+            isSignedInForAccountType(
+                prefs = sharedPreferences,
+                accountType = accountType,
+                firebaseUid = FirebaseAuth.getInstance().currentUser?.uid
+            )
+        )
+    }
+    val email = if (isSignedIn) {
+        FirebaseAuth.getInstance().currentUser?.email ?: "Not connected"
+    } else {
+        "Not connected"
+    }
+    val profilePhotoUrl = if (isSignedIn) {
+        FirebaseAuth.getInstance().currentUser?.photoUrl?.toString().orEmpty()
+    } else {
+        ""
     }
     var isGoogleSigningIn by remember { mutableStateOf(false) }
     var isSyncing by remember { mutableStateOf(false) }
@@ -184,6 +209,8 @@ fun SettingScreenComponent(navController: NavHostController){
                 idToken = idToken,
                 context = context,
                 onSuccess = { uid, _ ->
+                    saveSignedInUidForAccountType(sharedPreferences, accountType, uid)
+                    sharedPreferences.edit().putString("uid", uid).apply()
                     isSignedIn = true
                     restoreOrSyncAfterLogin(
                         context = context,
@@ -195,7 +222,11 @@ fun SettingScreenComponent(navController: NavHostController){
                     )
                 },
                 onFailure = { error ->
-                    isSignedIn = false
+                    isSignedIn = isSignedInForAccountType(
+                        prefs = sharedPreferences,
+                        accountType = accountType,
+                        firebaseUid = FirebaseAuth.getInstance().currentUser?.uid
+                    )
                     Toast.makeText(context, error, Toast.LENGTH_LONG).show()
                 }
             )
@@ -247,6 +278,8 @@ fun SettingScreenComponent(navController: NavHostController){
                         googleSignInClient.signOut().addOnCompleteListener {
                             sharedPreferences.edit()
                                 .remove("uid")
+                                .remove(PERSONAL_SIGNED_IN_UID_KEY)
+                                .remove(BUSINESS_SIGNED_IN_UID_KEY)
                                 .remove(LAST_SYNCED_AT_KEY)
                                 .apply()
                             isSignedIn = false
@@ -254,6 +287,8 @@ fun SettingScreenComponent(navController: NavHostController){
                         }.addOnFailureListener {
                             sharedPreferences.edit()
                                 .remove("uid")
+                                .remove(PERSONAL_SIGNED_IN_UID_KEY)
+                                .remove(BUSINESS_SIGNED_IN_UID_KEY)
                                 .remove(LAST_SYNCED_AT_KEY)
                                 .apply()
                             isSignedIn = false
@@ -295,6 +330,8 @@ fun SettingScreenComponent(navController: NavHostController){
                                     if (deleted) {
                                         sharedPreferences.edit()
                                             .remove("uid")
+                                            .remove(PERSONAL_SIGNED_IN_UID_KEY)
+                                            .remove(BUSINESS_SIGNED_IN_UID_KEY)
                                             .remove(LAST_SYNCED_AT_KEY)
                                             .apply()
                                         isSignedIn = false
@@ -370,6 +407,8 @@ fun SettingScreenComponent(navController: NavHostController){
                                         if (deleted) {
                                             sharedPreferences.edit()
                                                 .remove("uid")
+                                                .remove(PERSONAL_SIGNED_IN_UID_KEY)
+                                                .remove(BUSINESS_SIGNED_IN_UID_KEY)
                                                 .remove(LAST_SYNCED_AT_KEY)
                                                 .apply()
                                             isSignedIn = false
@@ -445,12 +484,39 @@ fun SettingScreenComponent(navController: NavHostController){
                                     .background(Color.White.copy(alpha = 0.15f), CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = userName?.trim()?.firstOrNull()?.uppercase() ?: "P",
-                                    color = Color.White,
-                                    fontSize = 28.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                if (isSignedIn && profilePhotoUrl.isNotBlank()) {
+                                    SubcomposeAsyncImage(
+                                        model = profilePhotoUrl,
+                                        contentDescription = "Profile picture",
+                                        modifier = Modifier
+                                            .size(64.dp)
+                                            .clip(CircleShape),
+                                        contentScale = ContentScale.Crop,
+                                        loading = {
+                                            Text(
+                                                text = userName?.trim()?.firstOrNull()?.uppercase() ?: "P",
+                                                color = Color.White,
+                                                fontSize = 28.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        },
+                                        error = {
+                                            Text(
+                                                text = userName?.trim()?.firstOrNull()?.uppercase() ?: "P",
+                                                color = Color.White,
+                                                fontSize = 28.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    Text(
+                                        text = userName?.trim()?.firstOrNull()?.uppercase() ?: "P",
+                                        color = Color.White,
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
 
                             SettingsPill(
@@ -493,11 +559,59 @@ fun SettingScreenComponent(navController: NavHostController){
         }
 
         item {
+            val targetAccountType = if (accountType.equals("business", ignoreCase = true)) {
+                "personal"
+            } else {
+                "business"
+            }
+            val targetRoute = if (targetAccountType == "business") {
+                BusinessHome.route
+            } else {
+                Home.route
+            }
+
+            SettingsActionCard(
+                title = "Switch to ${targetAccountType.replaceFirstChar { it.uppercase() }}",
+                subtitle = "Change app flow and bottom navigation to ${targetAccountType.replaceFirstChar { it.lowercase() }} mode",
+                icon = Icons.Default.SwapHoriz,
+                onClick = {
+                    sharedPreferences.edit()
+                        .putString("account_type", targetAccountType)
+                        .apply()
+                    val firebaseUid = FirebaseAuth.getInstance().currentUser?.uid
+                    val targetModeSignedIn = isSignedInForAccountType(
+                        prefs = sharedPreferences,
+                        accountType = targetAccountType,
+                        firebaseUid = firebaseUid
+                    )
+                    if (targetModeSignedIn) {
+                        sharedPreferences.edit().putString("uid", firebaseUid).apply()
+                    } else {
+                        sharedPreferences.edit().remove("uid").apply()
+                    }
+                    accountType = targetAccountType
+                    isSignedIn = targetModeSignedIn
+                    Toast.makeText(
+                        context,
+                        "Switched to ${targetAccountType.replaceFirstChar { it.uppercase() }} mode",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    navController.navigate(targetRoute) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                        launchSingleTop = true
+                        restoreState = false
+                    }
+                }
+            )
+        }
+
+        item {
             if (!isSignedIn) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     SettingsActionCard(
                         title = "Connect Google Account",
-                        subtitle = "Enable backup and restore for your local data",
+                        subtitle = "Sign in for ${accountType.replaceFirstChar { it.uppercase() }} mode backup/restore",
                         iconPainter = painterResource(id = R.drawable.google),
                         onClick = {
                             if (isGoogleSigningIn) return@SettingsActionCard
@@ -508,14 +622,14 @@ fun SettingScreenComponent(navController: NavHostController){
                         }
                     )
 
-                    SettingsActionCard(
-                        title = "Sign in with Email",
-                        subtitle = "Use your existing email and password account",
-                        icon = Icons.Default.Person,
-                        onClick = {
-                            navController.navigate(SignIn.route) { launchSingleTop = true }
-                        }
-                    )
+//                    SettingsActionCard(
+//                        title = "Sign in with Email",
+//                        subtitle = "Use your existing email and password account",
+//                        icon = Icons.Default.Person,
+//                        onClick = {
+//                            navController.navigate(SignIn.route) { launchSingleTop = true }
+//                        }
+//                    )
                 }
             } else {
                 SettingsActionCard(
@@ -524,6 +638,14 @@ fun SettingScreenComponent(navController: NavHostController){
                     icon = Icons.Default.CloudDone,
                     progress = if (isSyncing) 1f else null,
                     onClick = {
+                        if (!isSignedIn) {
+                            Toast.makeText(
+                                context,
+                                "Sign in to ${accountType.replaceFirstChar { it.uppercase() }} mode first",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@SettingsActionCard
+                        }
                         val uid = FirebaseAuth.getInstance().currentUser?.uid
                         if (uid.isNullOrEmpty()) {
                             Toast.makeText(context, "Please sign in first", Toast.LENGTH_SHORT).show()
@@ -1354,4 +1476,32 @@ private fun formatLastSynced(timestamp: Long): String {
     if (timestamp <= 0L) return "Last synced: Not synced yet"
     val formatter = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
     return "Last synced: ${formatter.format(Date(timestamp))}"
+}
+
+private fun signedInUidKeyForAccountType(accountType: String): String {
+    return if (accountType.equals("business", ignoreCase = true)) {
+        BUSINESS_SIGNED_IN_UID_KEY
+    } else {
+        PERSONAL_SIGNED_IN_UID_KEY
+    }
+}
+
+private fun saveSignedInUidForAccountType(
+    prefs: android.content.SharedPreferences,
+    accountType: String,
+    uid: String
+) {
+    prefs.edit()
+        .putString(signedInUidKeyForAccountType(accountType), uid)
+        .apply()
+}
+
+private fun isSignedInForAccountType(
+    prefs: android.content.SharedPreferences,
+    accountType: String,
+    firebaseUid: String?
+): Boolean {
+    if (firebaseUid.isNullOrBlank()) return false
+    val storedModeUid = prefs.getString(signedInUidKeyForAccountType(accountType), null)
+    return !storedModeUid.isNullOrBlank() && storedModeUid == firebaseUid
 }

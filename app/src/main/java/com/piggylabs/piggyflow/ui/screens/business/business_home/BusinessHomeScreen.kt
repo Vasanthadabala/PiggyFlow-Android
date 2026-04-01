@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Call
@@ -43,12 +42,12 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -58,6 +57,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -76,12 +76,12 @@ import com.piggylabs.piggyflow.navigation.BusinessPartyDetail
 import com.piggylabs.piggyflow.navigation.Notification
 import com.piggylabs.piggyflow.navigation.Profile
 import com.piggylabs.piggyflow.navigation.components.BottomBar
-import com.piggylabs.piggyflow.ui.screens.personal.home.getGreetingByTime
-import com.piggylabs.piggyflow.ui.screens.common.notification.calculateTrackerReminderCount
-import com.piggylabs.piggyflow.ui.screens.common.notification.getClearedTrackerNotificationKeys
 import com.piggylabs.piggyflow.ui.screens.business.viewmodel.BusinessLedgerViewModel
 import com.piggylabs.piggyflow.ui.screens.business.viewmodel.BusinessPartySummary
+import com.piggylabs.piggyflow.ui.screens.common.notification.calculateTrackerReminderCount
+import com.piggylabs.piggyflow.ui.screens.common.notification.getClearedTrackerNotificationKeys
 import com.piggylabs.piggyflow.ui.screens.common.tracker.viewmodel.TrackerViewModel
+import com.piggylabs.piggyflow.ui.screens.personal.home.getGreetingByTime
 import com.piggylabs.piggyflow.ui.theme.appColors
 import com.piggylabs.piggyflow.utils.LinkedOwnerParty
 import com.piggylabs.piggyflow.utils.PendingCustomerRequest
@@ -948,11 +948,12 @@ private fun AddPartySheet(
     onDismiss: () -> Unit,
     onSubmit: (String, String, String) -> Unit
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
+    val isValid = name.trim().isNotBlank()
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -1006,13 +1007,7 @@ private fun AddPartySheet(
                             cursorColor = appColors().text
                         ),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done // Use Done for the last field
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
+                            keyboardType = KeyboardType.Text
                         ),
                         leadingIcon = {
                             Box(
@@ -1074,13 +1069,7 @@ private fun AddPartySheet(
                             cursorColor = appColors().text
                         ),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done // Use Done for the last field
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
+                            keyboardType = KeyboardType.Phone
                         ),
                         leadingIcon = {
                             Box(
@@ -1142,13 +1131,7 @@ private fun AddPartySheet(
                             cursorColor = appColors().text
                         ),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done // Use Done for the last field
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
+                            keyboardType = KeyboardType.Text
                         ),
                         leadingIcon = {
                             Box(
@@ -1173,8 +1156,10 @@ private fun AddPartySheet(
 
             Button(
                 onClick = {
-                    if (name.isNotBlank() && phone.isNotBlank()) {
-                        onSubmit(name, phone, address)
+                    if (isValid) {
+                        onSubmit(name.trim(), phone.trim(), address.trim())
+                    } else {
+                        Toast.makeText(context, "Enter customer name", Toast.LENGTH_SHORT).show()
                     }
                 },
                 elevation = ButtonDefaults.buttonElevation(
@@ -1186,7 +1171,8 @@ private fun AddPartySheet(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = appColors().green,
                     contentColor = Color.White
-                )
+                ),
+                enabled = isValid
             ) {
                 Text(
                     text = "Save customer",
