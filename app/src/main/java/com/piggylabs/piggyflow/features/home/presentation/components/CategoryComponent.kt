@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +44,7 @@ fun CategoryItem(
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if(isSelected) Color(0xFF27C152).copy(alpha = 0.6f) else appColors().container,
+            containerColor = if(isSelected) appColors().green.copy(alpha = 0.6f) else appColors().container,
             contentColor = appColors().text,
         ),
         elevation = CardDefaults.cardElevation(0.dp)
@@ -81,7 +80,7 @@ fun UserCategoryItem(
             ),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if(isSelected) Color(0xFF27C152).copy(alpha = 0.6f) else appColors().container,
+            containerColor = if(isSelected) appColors().green.copy(alpha = 0.6f) else appColors().container,
             contentColor = appColors().text
         ),
         elevation = CardDefaults.cardElevation(0.dp)

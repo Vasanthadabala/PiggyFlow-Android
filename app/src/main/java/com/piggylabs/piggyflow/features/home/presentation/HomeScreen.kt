@@ -465,6 +465,42 @@ fun HomeScreenComponent(navController: NavHostController) {
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
+                                Surface(
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = Color.White.copy(alpha = 0.18f)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(
+                                            start = 6.dp,
+                                            end = 10.dp,
+                                            top = 3.dp,
+                                            bottom = 3.dp
+                                        ),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowDropUp,
+                                            contentDescription = null,
+                                            tint = Color(0xFF86EFAC),
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Text(
+                                            text = NET_BALANCE_CHANGE,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF86EFAC)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = "vs last month",
+                                            fontSize = 11.sp,
+                                            color = Color.White.copy(alpha = 0.85f)
+                                        )
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.height(10.dp))
+
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(
                                         text = "Net Balance",
@@ -502,42 +538,6 @@ fun HomeScreenComponent(navController: NavHostController) {
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                Surface(
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = Color.White.copy(alpha = 0.18f)
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(
-                                            start = 6.dp,
-                                            end = 10.dp,
-                                            top = 3.dp,
-                                            bottom = 3.dp
-                                        ),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.ArrowDropUp,
-                                            contentDescription = null,
-                                            tint = Color(0xFF86EFAC),
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(
-                                            text = NET_BALANCE_CHANGE,
-                                            fontSize = 11.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = Color(0xFF86EFAC)
-                                        )
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = "vs last month",
-                                            fontSize = 11.sp,
-                                            color = Color.White.copy(alpha = 0.85f)
-                                        )
-                                    }
-                                }
                             }
 
                             Row(

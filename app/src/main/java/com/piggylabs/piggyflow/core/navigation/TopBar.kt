@@ -13,7 +13,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +31,7 @@ fun TopBar(name:String,navController: NavHostController) {
                 text = name,
                 fontWeight = FontWeight.W600,
                 fontSize = 18.sp,
-                color = Color(0xFF27C152),
+                color = appColors().green,
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
         },
@@ -42,7 +41,7 @@ fun TopBar(name:String,navController: NavHostController) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "",
-                    tint = Color(0xFF27C152),
+                    tint = appColors().green,
                     modifier = Modifier.size(24.dp)
                 )
             }
