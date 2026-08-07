@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
     id("kotlin-kapt")
     id("org.jetbrains.kotlin.plugin.serialization")
 
@@ -43,6 +44,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -62,6 +64,10 @@ kotlin {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     //Navigation and Material-Design
     implementation("androidx.navigation:navigation-compose:2.9.6")
@@ -77,6 +83,11 @@ dependencies {
     implementation("androidx.room:room-ktx:2.8.4")
     implementation("androidx.lifecycle:lifecycle-process:2.10.0")
     kapt("androidx.room:room-compiler:2.8.4") //noinspection KaptUsageInsteadOfKsp
+
+    //Hilt - dependency injection
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Google SignIn (REMOVED play-services-drive - deprecated)
     implementation("com.google.android.gms:play-services-auth:21.4.0")
@@ -118,6 +129,10 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
+
+    //DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)

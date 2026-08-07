@@ -18,17 +18,21 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.piggylabs.piggyflow.navigation.AppNavigation
-import com.piggylabs.piggyflow.ui.theme.PiggyFlowTheme
-import com.piggylabs.piggyflow.ui.theme.appColors
+import com.piggylabs.piggyflow.core.navigation.NavGraph
+import dagger.hilt.android.AndroidEntryPoint
+import com.piggylabs.piggyflow.core.designsystem.theme.PiggyFlowTheme
+import com.piggylabs.piggyflow.core.designsystem.theme.ThemePreference
+import com.piggylabs.piggyflow.core.designsystem.theme.appColors
 
 @ExperimentalMaterial3Api
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var activityResultLauncher: ActivityResultLauncher<IntentSenderRequest>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        ThemePreference.init(applicationContext)
 
         // Initialize the result launcher
         activityResultLauncher = registerForActivityResult(
@@ -46,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                         .background(appColors().background)
                 ) {
-                    AppNavigation(context = applicationContext)
+                    NavGraph(context = applicationContext)
                 }
             }
         }
